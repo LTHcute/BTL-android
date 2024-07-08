@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "488251418205",
+    "project_id": "baitl-38912",
+    "storage_bucket": "baitl-38912.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488251418205:android:8ae7930ac08b6bb83fcfb4",
+        "android_client_info": {
+          "package_name": "com.example.btl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADo5uh1vfK4UPGEE3_-m4Gj6a85igxwQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
