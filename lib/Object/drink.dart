@@ -1,6 +1,4 @@
-import 'dart:ffi';
-
-class drink{
+class drink {
   String sMaDoUong;
   String sTenDoUong;
   int iGia;
@@ -10,6 +8,14 @@ class drink{
   int iDa;
   String sMaTopping;
   String sImg;
-drink({required this.sMaDoUong,required this.sTenDoUong,required this.iGia, required this.sThongTinChiTiet,required this.sSize, required this.iDuong, required this.iDa, required this.sMaTopping, required this.sImg});
-
+  drink(
+      {required this.sMaDoUong,
+      required this.sTenDoUong,
+      required this.iGia,
+      required this.sThongTinChiTiet,
+      required this.sSize,
+      required this.iDuong,
+      required this.iDa,
+      required this.sMaTopping,
+      required this.sImg});
 }
