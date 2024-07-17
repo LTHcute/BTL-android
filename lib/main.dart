@@ -1,3 +1,4 @@
+import 'package:btl/Pages/history/History.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           providers: [ChangeNotifierProvider(create: (context) => user())],
           child: const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: Wrapper(),
+            home: History(),
           )),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

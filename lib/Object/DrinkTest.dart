@@ -6,8 +6,8 @@ class Drink {
   int iGia;
   String sThongTinChiTiet;
   String sImg;
-  Drink(
-      {required this.sMaDoUong,
+
+  Drink({required this.sMaDoUong,
       required this.sTenDoUong,
       required this.iGia,
       required this.sThongTinChiTiet,
