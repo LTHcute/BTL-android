@@ -1,73 +1,50 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
 import 'package:btl/Pages/Dashboard/ChiTietDoUong.dart';
 import 'package:btl/Pages/Dashboard/ThongTinDoUong.dart';
+import 'package:btl/Pages/Dashboard/themDoUong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Oderdouong extends StatefulWidget {
-  const Oderdouong({super.key});
+  final String tenBan;
+
+  Oderdouong({super.key, required this.tenBan});
 
   @override
   State<Oderdouong> createState() => _OderdouongState();
 }
 
 class _OderdouongState extends State<Oderdouong> {
-  // final drinkCollection = FirebaseFirestore.instance.collection("")
-  List<drink> listDrink = [
-    drink(
-        sMaDoUong: "DU01",
-        sTenDoUong: "Trà sữa hồng đào",
-        iGia: 50000,
-        sThongTinChiTiet: "Đào từ Hàn Quốc",
-        sSize: "S",
-        iDuong: 70,
-        iDa: 50,
-        sMaTopping: "",
-        sImg: ""),
-    drink(
-        sMaDoUong: "DU01",
-        sTenDoUong: "Trà vải hạt nhài",
-        iGia: 60000,
-        sThongTinChiTiet: "Vải tươi",
-        sSize: "S",
-        iDuong: 70,
-        iDa: 50,
-        sMaTopping: "",
-        sImg: ""),
-    drink(
-        sMaDoUong: "DU01",
-        sTenDoUong: "Trà vải hạt nhài",
-        iGia: 60000,
-        sThongTinChiTiet: "Vải tươi",
-        sSize: "S",
-        iDuong: 70,
-        iDa: 50,
-        sMaTopping: "",
-        sImg: ""),
-    drink(
-        sMaDoUong: "DU01",
-        sTenDoUong: "Trà vải hạt nhài",
-        iGia: 60000,
-        sThongTinChiTiet: "Vải tươi",
-        sSize: "S",
-        iDuong: 70,
-        iDa: 50,
-        sMaTopping: "",
-        sImg: ""),
-    drink(
-        sMaDoUong: "DU01",
-        sTenDoUong: "Trà vải hạt nhài",
-        iGia: 60000,
-        sThongTinChiTiet: "Vải tươi",
-        sSize: "S",
-        iDuong: 70,
-        iDa: 50,
-        sMaTopping: "",
-        sImg: "")
-  ];
+  TextEditingController searchDrink = TextEditingController();
+
+  @override
+  void initState() {
+    getDrink();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var data = null;
+    if (searchDrink.text == null) {
+      setState(() {
+        data = FirebaseFirestore.instance.collection("Drink").snapshots();
+      });
+    } else {
+      setState(() {
+        data = FirebaseFirestore.instance
+            .collection("Drink")
+            .where("sTenDoUong",
+                isGreaterThan: searchDrink.text.toCapitalized())
+            .where("sTenDoUong",
+                isLessThan: searchDrink.text + "\uf8ff".toCapitalized())
+            .orderBy("sTenDoUong", descending: false)
+            .snapshots();
+      });
+    }
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "CHỌN ĐỒ UỐNG",
@@ -76,7 +53,7 @@ class _OderdouongState extends State<Oderdouong> {
         ),
         centerTitle: true,
       ),
-      body: Column(
+      body: ListView(
         children: [
           Center(
             child: Container(
@@ -84,7 +61,7 @@ class _OderdouongState extends State<Oderdouong> {
               width: 60,
               child: Center(
                 child: Text(
-                  "Bàn 1",
+                  widget.tenBan,
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                 ),
               ),
@@ -98,30 +75,54 @@ class _OderdouongState extends State<Oderdouong> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    data = FirebaseFirestore.instance
+                        .collection("Drink")
+                        .where("sTenDoUong", isGreaterThan: searchDrink.text)
+                        .orderBy("sTenDoUong", descending: false)
+                        .snapshots();
+                  });
+                },
+                controller: searchDrink,
                 decoration: InputDecoration(
                     hintText: "Search your drinks",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     suffixIcon: IconButton(
-                        onPressed: () {}, icon: Icon(Icons.search)))),
+                        onPressed: () {
+                          print("1");
+                          //getSearch(searchDrink.text);
+
+                          //  showSearch(context: context, delegate: CustomSearch());
+                        },
+                        icon: Icon(Icons.search)))),
           ),
           SizedBox(
             height: 20,
           ),
           SingleChildScrollView(
             child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection("Drink").snapshots(),
+              stream: data,
+              //FirebaseFirestore.instance.collection("Drink").snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data == null) {
+                  return Center(
+                    child: Text('Không có dữ liệu'),
+                  );
+                }
                 var document = snapshot.data!.docs;
+
                 return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Chitietdouong()));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>Thongtindouong()));
                       },
                       child: Container(
                         height: 570,
@@ -141,11 +142,32 @@ class _OderdouongState extends State<Oderdouong> {
                                       height: 100,
                                     ),
                                     onTap: () {
+                                      String img = document[index]["sImg"];
+                                      String name_drink =
+                                          document[index]["sTenDoUong"];
+                                      String detail =
+                                          document[index]["sThongTinChiTiet"];
+                                      int price = document[index]["iGia"];
+
+                                      drink new_drink = drink(
+                                          sMaDoUong: "",
+                                          sTenDoUong: name_drink,
+                                          iGia: price,
+                                          sThongTinChiTiet: detail,
+                                          sImg: img,
+                                          sSize: '',
+                                          iSoLuong: 0,
+                                          iDa: 0,
+                                          iDuong: 0,
+                                          sMaTopping: '',
+                                          fThanhTien: '');
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Thongtindouong()));
+                                                  new Chitietdouong(
+                                                    detail_drink: new_drink,
+                                                  )));
                                     },
                                   ),
                                   Positioned(
@@ -172,28 +194,32 @@ class _OderdouongState extends State<Oderdouong> {
                                     bottom: 15,
                                   ),
                                   Positioned(
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            document[index]["sTenDoUong"],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 13,
+                                    child: GestureDetector(
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              document[index]["sTenDoUong"],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            document[index]["sMaDoUong"],
-                                            style: TextStyle(fontSize: 10),
-                                          ),
-                                          Text(
-                                            document[index]["iGia"].toString(),
-                                            style: TextStyle(fontSize: 10),
-                                          )
-                                        ],
+                                            Text(
+                                              document[index]["sMaDoUong"],
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                            Text(
+                                              document[index]["iGia"]
+                                                  .toString(),
+                                              style: TextStyle(fontSize: 10),
+                                            )
+                                          ],
+                                        ),
+                                        height: 50,
+                                        width: 260,
                                       ),
-                                      height: 50,
-                                      width: 260,
+                                      onTap: () {},
                                     ),
                                     top: 40,
                                     left: 100,
@@ -201,9 +227,41 @@ class _OderdouongState extends State<Oderdouong> {
                                   ),
                                   Positioned(
                                     child: Container(
-                                      child: Icon(Icons.add_shopping_cart),
                                       height: 40,
                                       width: 50,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          String img = document[index]["sImg"];
+                                          String name_drink =
+                                              document[index]["sTenDoUong"];
+                                          String detail = document[index]
+                                              ["sThongTinChiTiet"];
+                                          int price = document[index]["iGia"];
+
+                                          drink new_drink = drink(
+                                              sMaDoUong: "",
+                                              sTenDoUong: name_drink,
+                                              iGia: price,
+                                              sThongTinChiTiet: detail,
+                                              sImg: img,
+                                              sSize: '',
+                                              iSoLuong: 0,
+                                              iDa: 0,
+                                              iDuong: 0,
+                                              sMaTopping: '',
+                                              fThanhTien: '');
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      new themDoUong(
+                                                        detail_drink: new_drink,
+                                                        tenBan: widget.tenBan,
+                                                      )));
+                                        },
+                                        child: Icon(Icons.add_shopping_cart),
+                                      ),
                                     ),
                                     top: 40,
                                     left: 300,
@@ -262,4 +320,87 @@ class _OderdouongState extends State<Oderdouong> {
       ),
     );
   }
+
+  search(String value) {}
+}
+
+Future<List<Map<String, dynamic>>> getSearch(String searchDrink) async {
+  print("2");
+
+  final drinkCollection = FirebaseFirestore.instance;
+  QuerySnapshot firestore = await drinkCollection
+      .collection("Drink")
+      .where("sTenDoUong", isEqualTo: searchDrink)
+      .get();
+
+  return firestore.docs
+      .map((doc) => doc.data() as Map<String, dynamic>)
+      .toList();
+}
+
+Future getDrink() async {
+  QuerySnapshot drinkCollection =
+      await FirebaseFirestore.instance.collection("Drink").get();
+
+  List<drink> listDrink = [];
+  if (drinkCollection.docs.isNotEmpty) {
+    int count = 0;
+    drinkCollection.docs.forEach((value) {
+      count = count + 1;
+      drink _drink = new drink(
+          sMaDoUong: value["sMaDoUong"],
+          sTenDoUong: value["sTenDoUong"],
+          iGia: value["iGia"],
+          sThongTinChiTiet: value["sThongTinChiTiet"],
+          sImg: '',
+          sSize: '',
+          iSoLuong: value["iSoLuong"],
+          iDuong: value["iDuong"],
+          iDa: value["iDa"],
+          sMaTopping: value["sMaTopping"],
+          fThanhTien: '');
+      listDrink.add(_drink);
+    });
+    print("count:" + count.toString());
+  }
+}
+
+Future getDrinkFilter(String filters) async {
+  QuerySnapshot drinkCollection = await FirebaseFirestore.instance
+      .collection("Drink")
+      .where("sTenDoUong", isGreaterThan: filters)
+      .orderBy("sTenDoUong", descending: false)
+      .get();
+
+  List<drink> listDrink = [];
+  if (drinkCollection.docs.isNotEmpty) {
+    int count = 0;
+    drinkCollection.docs.forEach((value) {
+      count = count + 1;
+      drink _drink = new drink(
+          sMaDoUong: value["sMaDoUong"],
+          sTenDoUong: value["sTenDoUong"],
+          iGia: value["iGia"],
+          sThongTinChiTiet: value["sThongTinChiTiet"],
+          sImg: value["sImg"],
+          sSize: '',
+          iSoLuong: value["iSoLuong"],
+          iDuong: value["iDuong"],
+          iDa: value["iDa"],
+          sMaTopping: value["sMaTopping"],
+          fThanhTien: '');
+      listDrink.add(_drink);
+    });
+    print("count:" + count.toString());
+  }
+}
+
+extension StringCasingExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
 }

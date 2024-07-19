@@ -1,4 +1,4 @@
-import 'package:btl/Pages/donThanhCong.dart';
+import 'package:btl/Pages/Dashboard/donThanhCong.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart'; // Import mô hình Drink
 
@@ -58,9 +58,7 @@ class _xacNhanDonState extends State<xacNhanDon> {
                     leading: Image.network(drink.sImg, width: 50),
                     title: Text(drink.sTenDoUong),
                     subtitle: Text(
-                      'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink
-                          .iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink
-                          .iGia} VND\nSL: ${drink.iSoLuong}',
+                      'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia} VND\nSL: ${drink.iSoLuong}',
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -125,13 +123,14 @@ class _xacNhanDonState extends State<xacNhanDon> {
                 onPressed: () {
                   // Điều hướng đến trang donThanhCong
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>
-                          donThanhCong(
-
-                              totalAmount: widget.totalAmount,  // Make sure cartDrinks is defined and populated
-                              orderedDrinks: widget.orderedDrinks,  // Replace with your actual total amount calculation
-                              tenBan: widget.tenBan)),
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => donThanhCong(
+                            totalAmount: widget
+                                .totalAmount, // Make sure cartDrinks is defined and populated
+                            orderedDrinks: widget
+                                .orderedDrinks, // Replace with your actual total amount calculation
+                            tenBan: widget.tenBan)),
                   );
                   // Handle the payment or order confirmation here
                   print('Selected Payment Method: $_selectedPaymentMethod');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class CaNhan extends StatefulWidget {
   const CaNhan({super.key});
 
@@ -16,14 +17,11 @@ class _CaNhanState extends State<CaNhan> {
             color: Colors.green,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-
             ),
             child: Icon(Icons.person),
-
           ),
           title: Text("Username"),
         ),
-
       ),
     );
   }

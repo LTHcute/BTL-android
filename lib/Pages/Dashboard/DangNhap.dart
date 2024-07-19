@@ -1,10 +1,8 @@
-import 'dart:developer';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:btl/Object/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:btl/Object/user.dart';
-import 'package:btl/Pages/Dashboard/TrangChu.dart';
 
 void main() {
   runApp(DangNhap());
@@ -20,39 +18,37 @@ class _DangNhap extends State<DangNhap> {
   TextEditingController password = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<void> checkAcc(String name) async {
+    QuerySnapshot document = await firestore
+        .collection("User")
+        .where("sUsername", isEqualTo: name)
+        .get();
+    if (document.docs.isNotEmpty) {
+      var pw = document.docs.first;
+      if (pw["sPassword"] == password.text) {
+        print("Done");
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => TrangChu()),
+        //     (route) => false);
+
+        Provider.of<user>(context, listen: false)
+            .setUsername(document.docs[0]['sUsername']);
+      } else {
+        print("password wrong");
+        Fluttertoast.showToast(
+            msg: "Mật khẩu không chính xác! Vui lòng thử lại");
+      }
+    } else {
+      print("Tài khoản không tồn tại");
+      Fluttertoast.showToast(msg: "Tài khoản không tồn tại");
+    }
+  }
+
   final formkey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    void showSnackBar(BuildContext context, String message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
-    }
-
-    Future<void> checkAcc(String name) async {
-      try {
-        QuerySnapshot document = await firestore
-            .collection("User")
-            .where("sUsername", isEqualTo: name)
-            .get();
-
-        if (document.docs.isNotEmpty) {
-          if (document.docs[0]['sPassword'] == password.text) {
-            Provider.of<user>(context, listen: false)
-                .setUsername(document.docs[0]['sUsername']);
-          } else {
-            showSnackBar(context, "Mật khẩu không chính xác! Vui lòng thử lại");
-          }
-        } else {
-          showSnackBar(context, "Tài khoản không tồn tại");
-        }
-      } catch (e) {
-        log("loi $e");
-      }
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(),
@@ -68,7 +64,7 @@ class _DangNhap extends State<DangNhap> {
           Center(
             child: Container(
               margin: EdgeInsets.all(0),
-              child: const Text(
+              child: Text(
                 "Starbucks Coffee",
                 style: TextStyle(color: Colors.green),
               ),
@@ -79,14 +75,14 @@ class _DangNhap extends State<DangNhap> {
               child: Form(
                 key: formkey,
                 child: Column(children: [
-                  const Text(
+                  Text(
                     "Đăng nhập",
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                   ),
                   TextFormField(
                     controller: username,
-                    decoration: const InputDecoration(
-                        hintText: "Nhập tên nhân viên", labelText: "Username"),
+                    decoration: InputDecoration(
+                        hintText: "Nhập username", labelText: "Username"),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Nhập username";
@@ -96,8 +92,16 @@ class _DangNhap extends State<DangNhap> {
                   ),
                   TextFormField(
                     controller: password,
-                    decoration: const InputDecoration(
-                        hintText: "Nhập password", labelText: "Password"),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        hintText: "Nhập password",
+                        labelText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {});
+                          },
+                          icon: Icon(Icons.remove_red_eye),
+                        )),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Nhập username";
@@ -105,15 +109,18 @@ class _DangNhap extends State<DangNhap> {
                       if (value.length < 8) {
                         return "Password không đủ 8 kí tự";
                       }
-
                       return null;
                     },
                   ),
-                  Checkbox(
-                    value: true,
-                    onChanged: (bool? value) {},
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: true,
+                        onChanged: (bool? value) {},
+                      ),
+                      Text("Lưu thông tin mật khẩu"),
+                    ],
                   ),
-                  const Text("Lưu thông tin mật khẩu"),
                   ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -124,7 +131,7 @@ class _DangNhap extends State<DangNhap> {
                           }
                         });
                       },
-                      child: const Text("Đăng nhập"))
+                      child: Text("Đăng nhập"))
                 ]),
               )),
         ],

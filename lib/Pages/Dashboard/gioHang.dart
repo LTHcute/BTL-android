@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
-import 'package:btl/Pages/xacNhanDon.dart'; // Import trang Xác Nhận Đơn
+import 'package:btl/Pages/Dashboard/xacNhanDon.dart'; // Import trang Xác Nhận Đơn
 
 class gioHang extends StatefulWidget {
   final String tenBan;
@@ -68,7 +68,10 @@ class _GioHangState extends State<gioHang> {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("OrderTam").where("sBan", isEqualTo: widget.tenBan).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("OrderTam")
+            .where("sBan", isEqualTo: widget.tenBan)
+            .snapshots(),
         builder: (context, snapshot) {
           cartDrinks = [];
           if (snapshot.hasData) {
@@ -84,14 +87,12 @@ class _GioHangState extends State<gioHang> {
                   iDuong: value["iDuong"],
                   iDa: value["iDa"],
                   sMaTopping: value["sMaTopping"],
-                  fThanhTien: ''
-              );
+                  fThanhTien: '');
               cartDrinks.add(dr);
             });
           }
 
           int totalAmount = _calculateTotalAmount();
-
 
           return Column(
             children: [
@@ -116,7 +117,8 @@ class _GioHangState extends State<gioHang> {
                                 setState(() {
                                   if (drink.iSoLuong > 1) {
                                     // Decrease quantity
-                                    _updateQuantity(drink.sMaDoUong, drink.iSoLuong - 1);
+                                    _updateQuantity(
+                                        drink.sMaDoUong, drink.iSoLuong - 1);
                                   } else {
                                     // Quantity is 1, so remove item
                                     _updateQuantity(drink.sMaDoUong, 0);
@@ -130,7 +132,8 @@ class _GioHangState extends State<gioHang> {
                               onPressed: () {
                                 setState(() {
                                   // Increase quantity
-                                  _updateQuantity(drink.sMaDoUong, drink.iSoLuong + 1);
+                                  _updateQuantity(
+                                      drink.sMaDoUong, drink.iSoLuong + 1);
                                 });
                               },
                             ),
@@ -152,17 +155,19 @@ class _GioHangState extends State<gioHang> {
                   children: [
                     Text(
                       'Tổng tiền: ${_calculateTotalAmount()} VND',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => xacNhanDon(
-                              orderedDrinks: cartDrinks,  // Make sure cartDrinks is defined and populated
-                              totalAmount: _calculateTotalAmount(),  // Replace with your actual total amount calculation
+                              orderedDrinks:
+                                  cartDrinks, // Make sure cartDrinks is defined and populated
+                              totalAmount:
+                                  _calculateTotalAmount(), // Replace with your actual total amount calculation
                               tenBan: widget.tenBan,
                             ),
                           ),
@@ -179,7 +184,4 @@ class _GioHangState extends State<gioHang> {
       ),
     );
   }
-
-
-
 }
