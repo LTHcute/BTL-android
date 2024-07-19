@@ -1,4 +1,5 @@
 import 'package:btl/Pages/Dashboard/donThanhCong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart'; // Import mô hình Drink
 
@@ -58,7 +59,9 @@ class _xacNhanDonState extends State<xacNhanDon> {
                     leading: Image.network(drink.sImg, width: 50),
                     title: Text(drink.sTenDoUong),
                     subtitle: Text(
-                      'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia} VND\nSL: ${drink.iSoLuong}',
+                      'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink
+                          .iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink
+                          .iGia} VND\nSL: ${drink.iSoLuong}',
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -121,16 +124,20 @@ class _xacNhanDonState extends State<xacNhanDon> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
+                  updateTable();
                   // Điều hướng đến trang donThanhCong
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donThanhCong(
-                            totalAmount: widget
-                                .totalAmount, // Make sure cartDrinks is defined and populated
-                            orderedDrinks: widget
-                                .orderedDrinks, // Replace with your actual total amount calculation
-                            tenBan: widget.tenBan)),
+                        builder: (context) =>
+                            donThanhCong(
+                                totalAmount: widget
+                                    .totalAmount,
+                                // Make sure cartDrinks is defined and populated
+                                orderedDrinks: widget
+                                    .orderedDrinks,
+                                // Replace with your actual total amount calculation
+                                tenBan: widget.tenBan)),
                   );
                   // Handle the payment or order confirmation here
                   print('Selected Payment Method: $_selectedPaymentMethod');
@@ -150,4 +157,19 @@ class _xacNhanDonState extends State<xacNhanDon> {
       ),
     );
   }
-}
+
+  Future<void> updateTable() async {
+    print(widget.tenBan);
+    QuerySnapshot document = await FirebaseFirestore.instance.collection(
+        "Table").where("sTenBan",isEqualTo: widget.tenBan).get();
+    if(document.docs.isNotEmpty)
+      {
+       DocumentReference docRef = document.docs.first.reference;
+       await docRef.update({"sTrangThai":"Đang sử dụng"});
+
+
+      }
+
+
+  }}
+

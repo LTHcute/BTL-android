@@ -1,5 +1,6 @@
 import 'package:btl/Object/drink.dart';
 import 'package:btl/Pages/Dashboard/OderDoUong.dart';
+import 'package:btl/Pages/Dashboard/xacNhanDon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -85,9 +86,6 @@ class _TableListState extends State<TableList> {
                                               ElevatedButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    print("Nhi ơi:" +
-                                                        documents[index]
-                                                            ["sTenBan"]);
                                                     final ft = FirebaseFirestore
                                                         .instance
                                                         .collection("Table")
@@ -162,6 +160,31 @@ class _TableListState extends State<TableList> {
                                       ],
                                     );
                                   });
+                            }
+                            if(documents[index]["sTrangThai"]=="Đang sử dụng")
+                            {
+                              showDialog(context: context, builder:( BuildContext context){
+                                return  AlertDialog(
+                                  title: Center(child: Text("Lựa chọn",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 17),),),
+                                  actions: [
+
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          ElevatedButton(onPressed: (){
+                                            setState(() {
+                                            //  Navigator.push(context, MaterialPageRoute(builder: (context)=>xacNhanDon(totalAmount: totalAmount, tenBan: tenBan, orderedDrinks: orderedDrinks)))
+                                              // Navigator.push(context,
+                                              // MaterialPageRoute(builder: ))
+                                            });
+                                          }, child: Text("Thanh toán",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 15),),style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),minimumSize: MaterialStateProperty.all<Size>(Size(200,40))),),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                );
+
+                              });
                             }
                             if (documents[index]["sTrangThai"] == "Đã đặt") {
                               showDialog(
