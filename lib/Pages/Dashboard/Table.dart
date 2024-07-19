@@ -172,7 +172,24 @@ class _TableListState extends State<TableList> {
                                       child: Column(
                                         children: [
                                           ElevatedButton(onPressed: (){
-                                            setState(() {
+                                            setState((){
+                                              final ft = FirebaseFirestore
+                                                  .instance
+                                                  .collection("Table")
+                                                  .doc(documents[index]
+                                                  .id);
+                                              print(ft);
+                                              ft.update({
+                                                "sTrangThai": "Trống"
+                                              }).then((_) {
+                                                print(
+                                                    "Update successful");
+                                              }).catchError((error) {
+                                                print(
+                                                    "Update failed: $error");
+                                              });
+
+                                              Navigator.of(context).pop();
                                             //  Navigator.push(context, MaterialPageRoute(builder: (context)=>xacNhanDon(totalAmount: totalAmount, tenBan: tenBan, orderedDrinks: orderedDrinks)))
                                               // Navigator.push(context,
                                               // MaterialPageRoute(builder: ))

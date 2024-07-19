@@ -280,43 +280,7 @@ class _OderdouongState extends State<Oderdouong> {
           SizedBox(
             height: 10,
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              fixedSize: Size(200, 50),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                ),
-                Text(
-                  "Đặt đồ",
-                  style: TextStyle(),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Stack(
-                  children: [
-                    Container(
-                      child: Icon(
-                        Icons.shopping_cart,
-                      ),
-                      height: 40,
-                      width: 40,
-                    ),
-                    Positioned(
-                      child: Text("0"),
-                      left: 25,
-                      bottom: 25,
-                    )
-                  ],
-                )
-              ],
-            ),
-            onPressed: () {},
-          )
+
         ],
       ),
     );

@@ -23,7 +23,7 @@ class   _donThanhCongState extends State<donThanhCong> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Đặt Đơn Thành Công"),
+        title: Center(child: Text("Đặt Đơn Thành Công"),)
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
