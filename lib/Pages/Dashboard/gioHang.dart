@@ -1,7 +1,9 @@
+import 'package:btl/Object/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
-import 'package:btl/Pages/Dashboard/xacNhanDon.dart'; // Import trang Xác Nhận Đơn
+import 'package:btl/Pages/Dashboard/xacNhanDon.dart';
+import 'package:provider/provider.dart'; // Import trang Xác Nhận Đơn
 
 class gioHang extends StatefulWidget {
   final String tenBan;
@@ -56,8 +58,50 @@ class _GioHangState extends State<gioHang> {
     return total;
   }
 
+  int _calculateTotalQuantity() {
+    int total = 0;
+    for (var item in cartDrinks) {
+      total += item.iSoLuong;
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    void addBill() async {
+      Map<String, dynamic> data = {
+        "dThoiGianLap": Timestamp.now(),
+        "sMaBan": widget.tenBan,
+        "iSoLuong": _calculateTotalQuantity(),
+        "sUsername": "",
+        "fThanhTien": _calculateTotalAmount(),
+      };
+      try {
+        DocumentReference docRef =
+            await FirebaseFirestore.instance.collection("Bill").add(data);
+
+        cartDrinks.forEach((drink) async {
+          Map<String, dynamic> detailBillData = {
+            "sMaHoaDon": docRef.id,
+            "sMaDoUong": drink.drinkId,
+            "sMaTopping": drink.sMaTopping,
+            "sSize": drink.sSize,
+            "iSoLuong": drink.iSoLuong,
+            "iDuong": drink.iDuong,
+            "iDa": drink.iDa,
+          };
+          await FirebaseFirestore.instance
+              .collection("Bill_Detail")
+              .add(detailBillData);
+          return;
+        });
+
+        print("Document added with ID: ${docRef.id}");
+      } catch (e) {
+        print("Error adding document: $e");
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -77,6 +121,7 @@ class _GioHangState extends State<gioHang> {
           if (snapshot.hasData) {
             snapshot.data?.docs.forEach((value) {
               drink dr = drink(
+                  drinkId: value["drinkId"],
                   sMaDoUong: value.id,
                   sTenDoUong: value["sTenDoUong"],
                   iGia: value["iGia"],
@@ -160,6 +205,7 @@ class _GioHangState extends State<gioHang> {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        addBill();
                         Navigator.push(
                           context,
                           MaterialPageRoute(

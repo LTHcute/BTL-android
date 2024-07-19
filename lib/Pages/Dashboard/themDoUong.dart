@@ -151,6 +151,7 @@ class _themDoUongState extends State<themDoUong> {
                         selectedSugarLevel != null) {
                       // Create a new drink with the selected options
                       final newDrink = drink(
+                        drinkId: widget.detail_drink.drinkId,
                         sMaDoUong: '',
                         sThongTinChiTiet: '',
                         sSize: selectedSize!,
@@ -164,8 +165,11 @@ class _themDoUongState extends State<themDoUong> {
                         fThanhTien: '',
                       );
 
+                      print("cccccc ${newDrink.drinkId}");
+
                       // Save to Firestore
                       Map<String, dynamic> data = {
+                        "drinkId": newDrink.drinkId,
                         "sImg": newDrink.sImg,
                         "sTenDoUong": newDrink.sTenDoUong,
                         "iGia": newDrink.iGia,

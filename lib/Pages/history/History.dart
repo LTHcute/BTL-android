@@ -50,7 +50,7 @@ class History extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           title: Text(
-                            "Bàn ${documentSnapshot['sMaBan']} | Tổng: ${formatter.format(documentSnapshot['fThanhTien'])} Đ",
+                            "${documentSnapshot['sMaBan']} | Tổng: ${formatter.format(documentSnapshot['fThanhTien'])} Đ",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,

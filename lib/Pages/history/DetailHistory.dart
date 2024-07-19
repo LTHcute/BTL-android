@@ -18,6 +18,8 @@ class DetailHistory extends StatelessWidget {
     DateTime date = t.toDate();
     String billId = bill.id;
 
+    print("aaaaa ${billId}");
+
     Future<List<Map<String, dynamic>>> getDrinksByBillId(String billId) async {
       // Reference to the Firestore instance
       final FirebaseFirestore firestore = FirebaseFirestore.instance;

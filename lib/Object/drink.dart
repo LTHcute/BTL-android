@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class drink {
+  String drinkId;
   String sMaDoUong;
   String sTenDoUong;
   int iGia;
@@ -15,19 +16,20 @@ class drink {
 
   var fThanhTien;
 
-  drink(
-      {required this.sMaDoUong,
-      required this.sTenDoUong,
-      required this.iGia,
-      required this.sThongTinChiTiet,
-      required this.sImg,
-      required this.sSize,
-      required this.iSoLuong,
-      required this.iDuong,
-      required this.iDa,
-      required this.sMaTopping,
-      required this.fThanhTien});
-
+  drink({
+    required this.sMaDoUong,
+    required this.sTenDoUong,
+    required this.iGia,
+    required this.sThongTinChiTiet,
+    required this.sImg,
+    this.sSize = "",
+    this.iSoLuong = 0,
+    this.iDuong = 0,
+    this.iDa = 0,
+    this.sMaTopping = "",
+    this.fThanhTien = 0,
+    this.drinkId = "",
+  });
   static drink fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return drink(
         sMaDoUong: snapshot['sMaDoUong'],

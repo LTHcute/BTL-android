@@ -1,6 +1,5 @@
 import 'package:btl/Object/drink.dart';
 import 'package:btl/Pages/Dashboard/ChiTietDoUong.dart';
-import 'package:btl/Pages/Dashboard/ThongTinDoUong.dart';
 import 'package:btl/Pages/Dashboard/themDoUong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,7 @@ class _OderdouongState extends State<Oderdouong> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "CHỌN ĐỒ UỐNG",
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
@@ -69,11 +68,11 @@ class _OderdouongState extends State<Oderdouong> {
                   color: Colors.green, borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
                 onChanged: (value) {
                   setState(() {
@@ -87,7 +86,7 @@ class _OderdouongState extends State<Oderdouong> {
                 controller: searchDrink,
                 decoration: InputDecoration(
                     hintText: "Search your drinks",
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     suffixIcon: IconButton(
                         onPressed: () {
@@ -96,9 +95,9 @@ class _OderdouongState extends State<Oderdouong> {
 
                           //  showSearch(context: context, delegate: CustomSearch());
                         },
-                        icon: Icon(Icons.search)))),
+                        icon: const Icon(Icons.search)))),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           SingleChildScrollView(
@@ -107,12 +106,12 @@ class _OderdouongState extends State<Oderdouong> {
               //FirebaseFirestore.instance.collection("Drink").snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
                 if (snapshot.data == null) {
-                  return Center(
+                  return const Center(
                     child: Text('Không có dữ liệu'),
                   );
                 }
@@ -129,7 +128,7 @@ class _OderdouongState extends State<Oderdouong> {
                         child: ListView.separated(
                             shrinkWrap: true,
                             separatorBuilder: (context, index) {
-                              return SizedBox(
+                              return const SizedBox(
                                 height: 20,
                               );
                             },
@@ -150,6 +149,7 @@ class _OderdouongState extends State<Oderdouong> {
                                       int price = document[index]["iGia"];
 
                                       drink new_drink = drink(
+                                          drinkId: document[index].id,
                                           sMaDoUong: "",
                                           sTenDoUong: name_drink,
                                           iGia: price,
@@ -239,6 +239,7 @@ class _OderdouongState extends State<Oderdouong> {
                                           int price = document[index]["iGia"];
 
                                           drink new_drink = drink(
+                                              drinkId: document[index].id,
                                               sMaDoUong: "",
                                               sTenDoUong: name_drink,
                                               iGia: price,
@@ -348,17 +349,18 @@ Future getDrink() async {
     drinkCollection.docs.forEach((value) {
       count = count + 1;
       drink _drink = new drink(
-          sMaDoUong: value["sMaDoUong"],
-          sTenDoUong: value["sTenDoUong"],
-          iGia: value["iGia"],
-          sThongTinChiTiet: value["sThongTinChiTiet"],
-          sImg: '',
-          sSize: '',
-          iSoLuong: value["iSoLuong"],
-          iDuong: value["iDuong"],
-          iDa: value["iDa"],
-          sMaTopping: value["sMaTopping"],
-          fThanhTien: '');
+        sMaDoUong: value["sMaDoUong"],
+        sTenDoUong: value["sTenDoUong"],
+        iGia: value["iGia"],
+        sThongTinChiTiet: value["sThongTinChiTiet"],
+        sImg: '',
+        // sSize: '',
+        // iSoLuong: value["iSoLuong"],
+        // iDuong: value["iDuong"],
+        // iDa: value["iDa"],
+        // sMaTopping: value["sMaTopping"],
+        // fThanhTien: ''
+      );
       listDrink.add(_drink);
     });
     print("count:" + count.toString());

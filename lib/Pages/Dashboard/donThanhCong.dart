@@ -1,3 +1,4 @@
+import 'package:btl/Pages/Dashboard/TrangChu.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart'; // Import mô hình Drink
 
@@ -88,6 +89,12 @@ class   _donThanhCongState extends State<donThanhCong> {
                 },
               ),
             ),
+            SizedBox(height: 10),
+            ElevatedButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>const TrangChu()));
+            }, child:
+              const Text("Về trang chủ")
+            )
           ],
         ),
       ),
