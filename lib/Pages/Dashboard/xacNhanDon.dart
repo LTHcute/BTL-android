@@ -126,7 +126,7 @@ class _xacNhanDonState extends State<xacNhanDon> {
                 onPressed: () {
                   updateTable();
                   // Điều hướng đến trang donThanhCong
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
@@ -137,7 +137,7 @@ class _xacNhanDonState extends State<xacNhanDon> {
                                 orderedDrinks: widget
                                     .orderedDrinks,
                                 // Replace with your actual total amount calculation
-                                tenBan: widget.tenBan)),
+                                tenBan: widget.tenBan)),(route) => false,
                   );
                   // Handle the payment or order confirmation here
                   print('Selected Payment Method: $_selectedPaymentMethod');
@@ -166,10 +166,6 @@ class _xacNhanDonState extends State<xacNhanDon> {
       {
        DocumentReference docRef = document.docs.first.reference;
        await docRef.update({"sTrangThai":"Đang sử dụng"});
-
-
       }
-
-
   }}
 
