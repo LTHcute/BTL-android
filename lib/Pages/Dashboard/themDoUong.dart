@@ -1,6 +1,5 @@
 import 'package:btl/Pages/Dashboard/gioHang.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
 
@@ -27,7 +26,6 @@ class _themDoUongState extends State<themDoUong> {
   final List<String> toppings = ['Topping 1', 'Topping 2', 'Topping 3'];
 
   String iceLevelToString(int level) => '${level}%';
-
   String sugarLevelToString(int level) => '${level}%';
 
   @override
@@ -46,170 +44,203 @@ class _themDoUongState extends State<themDoUong> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-                child: Image.network(widget.detail_drink.sImg, width: 100)),
-            SizedBox(height: 20),
-            Text(
-              widget.detail_drink.sTenDoUong,
-              style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Text(
-                    widget.detail_drink.iGia.toString(),
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30),
+            Card(
+              margin: EdgeInsets.only(bottom: 16.0),
+              child: ListTile(
+                contentPadding: EdgeInsets.all(16.0),
+                leading: Image.network(widget.detail_drink.sImg, width: 100,height: 120,),
+
+                title: Text(
+                  widget.detail_drink.sTenDoUong,
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20),
+
+                ),
+
+                subtitle: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+
+                      Text(
+                        widget.detail_drink.iGia.toString(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      ),
+                      SizedBox(width: 4.0),
+                      Text(
+                        "VND",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      ),
+                    ],
                   ),
-                  Text(
-                    " VND",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30),
-                  ),
-                ],
+                ),
               ),
             ),
-            SizedBox(height: 20),
 
-            // Size Selection
-            Text('Chọn Size:'),
+
+            Text(
+              'Chọn Size:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             ...sizes.map((String size) {
-              return RadioListTile<String>(
-                title: Text(size),
-                value: size,
-                groupValue: selectedSize,
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedSize = value;
-                  });
-                },
-              );
-            }).toList(),
-
-            // Ice Level Selection
-            Text('Chọn Đá:'),
-            ...iceLevels.map((int iceLevel) {
-              return RadioListTile<int>(
-                title: Text(iceLevelToString(iceLevel)),
-                value: iceLevel,
-                groupValue: selectedIceLevel,
-                onChanged: (int? value) {
-                  setState(() {
-                    selectedIceLevel = value;
-                  });
-                },
-              );
-            }).toList(),
-
-            // Sugar Level Selection
-            Text('Chọn Đường:'),
-            ...sugarLevels.map((int sugarLevel) {
-              return RadioListTile<int>(
-                title: Text(sugarLevelToString(sugarLevel)),
-                value: sugarLevel,
-                groupValue: selectedSugarLevel,
-                onChanged: (int? value) {
-                  setState(() {
-                    selectedSugarLevel = value;
-                  });
-                },
-              );
-            }).toList(),
-
-            // Toppings Selection
-            Text('Chọn Topping:'),
-            ...toppings.map((String topping) {
-              return RadioListTile<String>(
-                title: Text(topping),
-                value: topping,
-                groupValue: selectedTopping,
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedTopping = value;
-                  });
-                },
-              );
-            }).toList(),
-
-            // Save Button
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (selectedSize != null &&
-                        selectedIceLevel != null &&
-                        selectedSugarLevel != null) {
-                      // Create a new drink with the selected options
-                      final newDrink = drink(
-                        drinkId: widget.detail_drink.drinkId,
-                        sMaDoUong: '',
-                        sThongTinChiTiet: '',
-                        sSize: selectedSize!,
-                        iDa: selectedIceLevel!,
-                        iDuong: selectedSugarLevel!,
-                        sMaTopping: selectedTopping ?? '',
-                        iSoLuong: 1,
-                        sImg: widget.detail_drink.sImg,
-                        sTenDoUong: widget.detail_drink.sTenDoUong,
-                        iGia: widget.detail_drink.iGia,
-                        fThanhTien: '',
-                      );
-
-                      print("cccccc ${newDrink.drinkId}");
-
-                      // Save to Firestore
-                      Map<String, dynamic> data = {
-                        "drinkId": newDrink.drinkId,
-                        "sImg": newDrink.sImg,
-                        "sTenDoUong": newDrink.sTenDoUong,
-                        "iGia": newDrink.iGia,
-                        "sMaTopping": newDrink.sMaTopping,
-                        "iDa": newDrink.iDa,
-                        "iDuong": newDrink.iDuong,
-                        "sSize": newDrink.sSize,
-                        "iSoLuong": newDrink.iSoLuong,
-                        "sBan": widget.tenBan,
-                        "fThanhTien": newDrink.fThanhTien,
-                      };
-                      final add = await FirebaseFirestore.instance
-                          .collection("OrderTam")
-                          .add(data);
-
-                      // Optionally reset selections
-                      setState(() {
-                        selectedSize = null;
-                        selectedIceLevel = null;
-                        selectedSugarLevel = null;
-                        selectedTopping = null;
-                      });
-
-                      // Navigate to GioHang with the updated cart
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => gioHang(
-                            tenBan: widget.tenBan,
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text('Vui lòng chọn đầy đủ thông tin')),
-                      );
-                    }
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 4.0),
+                child: RadioListTile<String>(
+                  title: Text(size),
+                  value: size,
+                  groupValue: selectedSize,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedSize = value;
+                    });
                   },
-                  child: Text('Thêm vào giỏ hàng'),
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 16.0),
+            Text(
+              'Chọn Đá:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ...iceLevels.map((int iceLevel) {
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 4.0),
+                child: RadioListTile<int>(
+                  title: Text(iceLevelToString(iceLevel)),
+                  value: iceLevel,
+                  groupValue: selectedIceLevel,
+                  onChanged: (int? value) {
+                    setState(() {
+                      selectedIceLevel = value;
+                    });
+                  },
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 16.0),
+            Text(
+              'Chọn Đường:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ...sugarLevels.map((int sugarLevel) {
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 4.0),
+                child: RadioListTile<int>(
+                  title: Text(sugarLevelToString(sugarLevel)),
+                  value: sugarLevel,
+                  groupValue: selectedSugarLevel,
+                  onChanged: (int? value) {
+                    setState(() {
+                      selectedSugarLevel = value;
+                    });
+                  },
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 16.0),
+            Text(
+              'Chọn Topping:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ...toppings.map((String topping) {
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 4.0),
+                child: RadioListTile<String>(
+                  title: Text(topping),
+                  value: topping,
+                  groupValue: selectedTopping,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedTopping = value;
+                    });
+                  },
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 20.0),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (selectedSize != null &&
+                      selectedIceLevel != null &&
+                      selectedSugarLevel != null) {
+                    // Create a new drink with the selected options
+                    final newDrink = drink(
+                      drinkId: widget.detail_drink.drinkId,
+                      sMaDoUong: '',
+                      sThongTinChiTiet: '',
+                      sSize: selectedSize!,
+                      iDa: selectedIceLevel!,
+                      iDuong: selectedSugarLevel!,
+                      sMaTopping: selectedTopping ?? '',
+                      iSoLuong: 1,
+                      sImg: widget.detail_drink.sImg,
+                      sTenDoUong: widget.detail_drink.sTenDoUong,
+                      iGia: widget.detail_drink.iGia,
+                      fThanhTien: '',
+                    );
+
+                    print("cccccc ${newDrink.drinkId}");
+
+                    // Save to Firestore
+                    Map<String, dynamic> data = {
+                      "drinkId": newDrink.drinkId,
+                      "sImg": newDrink.sImg,
+                      "sTenDoUong": newDrink.sTenDoUong,
+                      "iGia": newDrink.iGia,
+                      "sMaTopping": newDrink.sMaTopping,
+                      "iDa": newDrink.iDa,
+                      "iDuong": newDrink.iDuong,
+                      "sSize": newDrink.sSize,
+                      "iSoLuong": newDrink.iSoLuong,
+                      "sBan": widget.tenBan,
+                      "fThanhTien": newDrink.fThanhTien,
+                    };
+                    final add = await FirebaseFirestore.instance
+                        .collection("OrderTam")
+                        .add(data);
+
+                    // Optionally reset selections
+                    setState(() {
+                      selectedSize = null;
+                      selectedIceLevel = null;
+                      selectedSugarLevel = null;
+                      selectedTopping = null;
+                    });
+
+                    // Navigate to GioHang with the updated cart
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => gioHang(
+                          tenBan: widget.tenBan,
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Vui lòng chọn đầy đủ thông tin'),
+                      ),
+                    );
+                  }
+                },
+                child: Text('Thêm vào giỏ hàng'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
