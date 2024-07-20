@@ -1,6 +1,7 @@
 import 'package:btl/Object/drink.dart';
 import 'package:btl/Pages/Dashboard/ChiTietDoUong.dart';
 import 'package:btl/Pages/Dashboard/themDoUong.dart';
+import 'package:btl/Pages/Dashboard/gioHang.dart'; // Import gioHang
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,28 @@ class _OderdouongState extends State<Oderdouong> {
 
   @override
   void initState() {
-    getDrink();
     super.initState();
+  }
+
+  Future<int> _getTotalQuantity() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection("OrderTam")
+          .where("sBan", isEqualTo: widget.tenBan)
+          .get();
+
+      int totalQuantity = 0;
+      for (var doc in snapshot.docs) {
+        var data = doc.data() as Map<String, dynamic>;
+        // Ensure iSoLuong is converted to int
+        totalQuantity += (data["iSoLuong"] as num).toInt() ?? 0;
+      }
+
+      return totalQuantity;
+    } catch (e) {
+      print("Lỗi khi lấy số lượng món đồ trong giỏ hàng: $e");
+      return 0;
+    }
   }
 
   @override
@@ -51,6 +72,67 @@ class _OderdouongState extends State<Oderdouong> {
               color: Colors.black, fontWeight: FontWeight.w700, fontSize: 20),
         ),
         centerTitle: true,
+        actions: [
+          FutureBuilder<int>(
+            future: _getTotalQuantity(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {},
+                );
+              }
+
+              int itemCount = snapshot.data ?? 0;
+
+              return IconButton(
+                icon: Stack(
+                  children: [
+                    Icon(
+                      Icons.shopping_cart,
+                      size: 40,
+                    ),
+                    if (itemCount > 0)
+                      Positioned(
+                        right: 0,
+                        top: -0,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          constraints: BoxConstraints(
+                            maxWidth: 30,
+                            maxHeight: 20,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$itemCount',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => gioHang(
+                        tenBan: widget.tenBan,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         children: [
@@ -165,7 +247,7 @@ class _OderdouongState extends State<Oderdouong> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  new Chitietdouong(
+                                                  new Chitietdouong(tenBan: widget.tenBan,
                                                     detail_drink: new_drink,
                                                   )));
                                     },
@@ -280,11 +362,81 @@ class _OderdouongState extends State<Oderdouong> {
           SizedBox(
             height: 10,
           ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              fixedSize: Size(200, 50),
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 40,
+                ),
+                Text(
+                  "Đặt đồ",
+                  style: TextStyle(),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Stack(
+                  children: [
+                    Container(
+                      child: Icon(
+                        Icons.shopping_cart,
+                      ),
+                      height: 40,
+                      width: 40,
+                    ),
+                    FutureBuilder<int>(
+                      future: _getTotalQuantity(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container();
+                        }
 
+                        int itemCount = snapshot.data ?? 0;
+
+                        return Positioned(
+                          right: 0,
+                          top: 0,
+                          child: itemCount > 0
+                              ? Container(
+                                  padding: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  constraints: BoxConstraints(
+                                    maxWidth: 20,
+                                    maxHeight: 20,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '$itemCount',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        );
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
+            onPressed: () {},
+          )
         ],
       ),
     );
   }
+
 
   search(String value) {}
 }
@@ -359,6 +511,7 @@ Future getDrinkFilter(String filters) async {
     });
     print("count:" + count.toString());
   }
+
 }
 
 extension StringCasingExtension on String {

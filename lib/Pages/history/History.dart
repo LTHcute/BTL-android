@@ -20,7 +20,9 @@ class History extends StatelessWidget {
           centerTitle: true,
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection("Bill").snapshots(),
+          stream: FirebaseFirestore.instance.collection("Bill")
+              .orderBy("dThoiGianLap", descending: true) //thêm 1 dòng này này là để sort theo dThoiGianLap
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
