@@ -136,7 +136,7 @@ class _xacNhanDonState extends State<xacNhanDon> {
                                 // Make sure cartDrinks is defined and populated
                                 orderedDrinks: widget
                                     .orderedDrinks,
-                                // Replace with your actual total amount calculation
+                                // Replace with you r actual total amount calculation
                                 tenBan: widget.tenBan)),(route) => false,
                   );
                   // Handle the payment or order confirmation here

@@ -136,96 +136,102 @@ class _GioHangState extends State<gioHang> {
               cartDrinks.add(dr);
             });
           }
-
           int totalAmount = _calculateTotalAmount();
-
+          if(cartDrinks.length==0)
+            {
+              return Center(child: Text("Your cart is empty :("),);
+            }
+        else
+          {
+            print(cartDrinks.length);
           return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: cartDrinks.length,
-                  itemBuilder: (context, index) {
-                    final drink = cartDrinks[index];
-                    return Card(
-                      margin: EdgeInsets.all(8.0),
-                      child: ListTile(
-                        leading: Image.network(drink.sImg, width: 50),
-                        title: Text(drink.sTenDoUong),
-                        subtitle: Text(
-                            'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia * drink.iSoLuong} VND'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove, color: Colors.blue),
-                              onPressed: () {
-                                setState(() {
-                                  if (drink.iSoLuong > 1) {
-                                    // Decrease quantity
-                                    _updateQuantity(
-                                        drink.sMaDoUong, drink.iSoLuong - 1);
-                                  } else {
-                                    // Quantity is 1, so remove item
-                                    _updateQuantity(drink.sMaDoUong, 0);
-                                  }
-                                });
-                              },
-                            ),
-                            Text(' ${drink.iSoLuong}'),
-                            IconButton(
-                              icon: Icon(Icons.add, color: Colors.blue),
-                              onPressed: () {
-                                setState(() {
-                                  // Increase quantity
-                                  _updateQuantity(
-                                      drink.sMaDoUong, drink.iSoLuong + 1);
-                                });
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.pink),
-                              onPressed: () => _deleteItem(drink.sMaDoUong),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Tổng tiền: ${_calculateTotalAmount()} VND',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        addBill();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => xacNhanDon(
-                              orderedDrinks:
-                                  cartDrinks, // Make sure cartDrinks is defined and populated
-                              totalAmount:
-                                  _calculateTotalAmount(), // Replace with your actual total amount calculation
-                              tenBan: widget.tenBan,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text('Thanh toán'),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          children: [
+          Expanded(
+          child: ListView.builder(
+          itemCount: cartDrinks.length,
+          itemBuilder: (context, index) {
+          final drink = cartDrinks[index];
+          return Card(
+          margin: EdgeInsets.all(8.0),
+          child: ListTile(
+          leading: Image.network(drink.sImg, width: 50),
+          title: Text(drink.sTenDoUong),
+          subtitle: Text(
+          'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia * drink.iSoLuong} VND'),
+          trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+          IconButton(
+          icon: Icon(Icons.remove, color: Colors.blue),
+          onPressed: () {
+          setState(() {
+          if (drink.iSoLuong > 1) {
+          // Decrease quantity
+          _updateQuantity(
+          drink.sMaDoUong, drink.iSoLuong - 1);
+          } else {
+          // Quantity is 1, so remove item
+          _updateQuantity(drink.sMaDoUong, 0);
+          }
+          });
+          },
+          ),
+          Text(' ${drink.iSoLuong}'),
+          IconButton(
+          icon: Icon(Icons.add, color: Colors.blue),
+          onPressed: () {
+          setState(() {
+          // Increase quantity
+          _updateQuantity(
+          drink.sMaDoUong, drink.iSoLuong + 1);
+          });
+          },
+          ),
+          IconButton(
+          icon: Icon(Icons.delete, color: Colors.pink),
+          onPressed: () => _deleteItem(drink.sMaDoUong),
+          ),
+          ],
+          ),
+          ),
           );
+          },
+          ),
+          ),
+          Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Text(
+          'Tổng tiền: ${_calculateTotalAmount()} VND',
+          style:
+          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          ElevatedButton(
+          onPressed: () {
+          addBill();
+          Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => xacNhanDon(
+          orderedDrinks:
+          cartDrinks, // Make sure cartDrinks is defined and populated
+          totalAmount:
+          _calculateTotalAmount(), // Replace with your actual total amount calculation
+          tenBan: widget.tenBan,
+          ),
+          ),
+          );
+          },
+          child: Text('Thanh toán'),
+          ),
+          ],
+          ),
+          ),
+          ],
+          );
+          }
         },
       ),
     );

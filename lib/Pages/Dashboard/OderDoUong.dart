@@ -290,7 +290,7 @@ class _OderdouongState extends State<Oderdouong> {
 }
 
 Future<List<Map<String, dynamic>>> getSearch(String searchDrink) async {
-  print("2");
+
 
   final drinkCollection = FirebaseFirestore.instance;
   QuerySnapshot firestore = await drinkCollection
