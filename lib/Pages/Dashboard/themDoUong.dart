@@ -20,10 +20,10 @@ class _themDoUongState extends State<themDoUong> {
   int? selectedSugarLevel;
   String? selectedTopping;
 
-  final List<String> sizes = ['Nhỏ', 'Vừa', 'Lớn'];
+  final List<String> sizes = ['S', 'M', 'L'];
   final List<int> iceLevels = [0, 50, 100];
   final List<int> sugarLevels = [0, 50, 100];
-  final List<String> toppings = ['Topping 1', 'Topping 2', 'Topping 3'];
+  final List<String> toppings = ['TP1', 'TP2', 'TP3','Không'];
 
   String iceLevelToString(int level) => '${level}%';
   String sugarLevelToString(int level) => '${level}%';
@@ -48,7 +48,7 @@ class _themDoUongState extends State<themDoUong> {
               margin: EdgeInsets.only(bottom: 16.0),
               child: ListTile(
                 contentPadding: EdgeInsets.all(16.0),
-                leading: Image.network(widget.detail_drink.sImg, width: 100,height: 120,),
+                leading: Image.network(widget.detail_drink.sImg, width: 100,height: 100,),
 
                 title: Text(
                   widget.detail_drink.sTenDoUong,
@@ -217,13 +217,14 @@ class _themDoUongState extends State<themDoUong> {
                     });
 
                     // Navigate to GioHang with the updated cart
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => gioHang(
                           tenBan: widget.tenBan,
                         ),
                       ),
+                          (route) => false, // Loại bỏ tất cả các route hiện có
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

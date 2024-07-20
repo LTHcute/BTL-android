@@ -5,7 +5,8 @@ import 'package:btl/Object/drink.dart';
 import 'package:btl/Pages/Dashboard/xacNhanDon.dart';
 import 'package:provider/provider.dart';
 
-import 'OderDoUong.dart'; // Import trang Xác Nhận Đơn
+import 'OderDoUong.dart';
+import 'edit_drink_page.dart'; // Import trang Xác Nhận Đơn
 
 class gioHang extends StatefulWidget {
   final String tenBan;
@@ -219,50 +220,138 @@ class _GioHangState extends State<gioHang> {
                   itemCount: cartDrinks.length,
                   itemBuilder: (context, index) {
                     final drink = cartDrinks[index];
+
                     return Card(
                       margin: EdgeInsets.all(8.0),
-                      child: ListTile(
-                        leading: Image.network(drink.sImg, width: 50),
-                        title: Text(drink.sTenDoUong),
-                        subtitle: Text(
-                            'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia * drink.iSoLuong} VND'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove, color: Colors.blue),
-                              onPressed: () {
-                                setState(() {
-                                  if (drink.iSoLuong > 1) {
-                                    // Decrease quantity
-                                    _updateQuantity(
-                                        drink.sMaDoUong, drink.iSoLuong - 1);
-                                  } else {
-                                    // Quantity is 1, so remove item
-                                    _updateQuantity(drink.sMaDoUong, 0);
-                                  }
-                                });
-                              },
+                      child: Row(
+                        children: [
+                          // Drink Information
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  // Drink Image
+                                  Image.network(
+                                    drink.sImg,
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  SizedBox(width: 8),
+                                  // Drink Details
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          drink.sTenDoUong,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 14),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'Size: ${drink.sSize}',
+                                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                                        ),
+                                        Text(
+                                          'Đá: ${drink.iDa}%',
+                                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                                        ),
+                                        Text(
+                                          'Đường: ${drink.iDuong}%',
+                                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                                        ),
+                                        Text(
+                                          'Topping: ${drink.sMaTopping}',
+                                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          'Giá: ${drink.iGia * drink.iSoLuong} VND',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(' ${drink.iSoLuong}'),
-                            IconButton(
-                              icon: Icon(Icons.add, color: Colors.blue),
-                              onPressed: () {
-                                setState(() {
-                                  // Increase quantity
-                                  _updateQuantity(
-                                      drink.sMaDoUong, drink.iSoLuong + 1);
-                                });
-                              },
+                          ),
+                          // Action Controls (Edit, Delete, Quantity)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Quantity Controls
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.remove, color: Colors.blue),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (drink.iSoLuong > 1) {
+                                            _updateQuantity(drink.sMaDoUong, drink.iSoLuong - 1);
+                                          } else {
+                                            _updateQuantity(drink.sMaDoUong, 0);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text('${drink.iSoLuong}', style: TextStyle(fontSize: 14)),
+                                    IconButton(
+                                      icon: Icon(Icons.add, color: Colors.blue),
+                                      onPressed: () {
+                                        setState(() {
+                                          _updateQuantity(drink.sMaDoUong, drink.iSoLuong + 1);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                // Edit and Delete Buttons
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit, color: Colors.orange),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => EditDrinkPage(
+                                              drinkId: drink.sMaDoUong,
+                                              tenDoUong: drink.sTenDoUong,
+                                              gia: drink.iGia,
+                                              soLuong: drink.iSoLuong,
+                                              size: drink.sSize,
+                                              da: drink.iDa,
+                                              duong: drink.iDuong,
+                                              topping: drink.sMaTopping,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete, color: Colors.pink),
+                                      onPressed: () => _deleteItem(drink.sMaDoUong),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.pink),
-                              onPressed: () => _deleteItem(drink.sMaDoUong),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
+
+
+
                   },
                 ),
               ),
