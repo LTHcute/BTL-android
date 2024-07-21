@@ -331,7 +331,68 @@ class _xacNhanDonState extends State<xacNhanDon> {
       ),
     );
   }
+  String generateVcbQrData({
+    required String amount,
+    String? description,
+    String? additionalData,
+  }) {
+    final sb = StringBuffer();
+    sb.write(
+        "00020101021138570010A00000072701270006970422011357901433632510208QRIBFTTA530370454");
+    if (amount.length < 10) {
+      sb.write("0" + amount.length.toString() + amount);
+    } else {
+      sb.write(amount.length.toString() + amount);
+    }
+    sb.write("5802VN");
 
+    // Thêm mã định danh vào chuỗi QR
+    if (description != null) {
+      sb.write("62");
+      sb.write((description.length + 4)
+          .toString()
+          .padLeft(2, '0')); // Độ dài description (2 ký tự)
+      sb.write("08");
+      sb.write(description.length
+          .toString()
+          .padLeft(2, '0')); // Độ dài description (2 ký tự)
+      sb.write(description);
+      // sb.write(description.length.toString().padLeft(2, '0') + description);
+    }
+
+    sb.write("6304");
+
+    int crcValue = calculateCRC16CCITT(sb.toString());
+    final crc16 = crcValue.toRadixString(16).toUpperCase().padLeft(4, '0');
+    sb.write(crc16.toString());
+    print(sb.toString());
+    return sb.toString();
+  }
+
+  int calculateCRC16CCITT(String input) {
+    // Chuyển đổi chuỗi thành danh sách các byte
+    List<int> bytes = input.codeUnits;
+
+    // Bảng mã CRC-16/CCITT-FALSE
+    const int polynomial = 0x1021;
+    int crc = 0xFFFF; // Giá trị ban đầu
+
+    for (int byte in bytes) {
+      crc ^= (byte << 8);
+      for (int i = 0; i < 8; i++) {
+        if ((crc & 0x8000) != 0) {
+          crc = (crc << 1) ^ polynomial;
+        } else {
+          crc <<= 1;
+        }
+      }
+    }
+
+    // Loại bỏ bit cao nhất để có kết quả 16-bit
+    crc &= 0xFFFF;
+
+    return crc;
+  }
   Future<void> updateTable() async {
     print(widget.tenBan);
     QuerySnapshot document = await FirebaseFirestore.instance.collection(
@@ -355,11 +416,22 @@ class _xacNhanDonState extends State<xacNhanDon> {
               Text('Quét mã QR để thực hiện chuyển khoản.'),
               SizedBox(height: 20),
               // Add the QR code here (example)
-              SizedBox(
-                width: 200.0,
-                height: 200.0,
-
-              ),
+              // SizedBox(
+              //   width: 200.0,
+              //   height: 200.0,
+              //
+              // ),
+              Container(
+                width: 200,
+                height: 200,
+                child: QrImageView(
+                  size: 200,
+                  data: generateVcbQrData(
+                    amount: widget.totalAmount.toString(),
+                    description: "HOA DON DO UONG CUA HANG STARBUCKS ",
+                  ),
+                ),
+              )
             ],
           ),
           actions: <Widget>[
