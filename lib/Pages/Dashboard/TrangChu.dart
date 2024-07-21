@@ -23,6 +23,7 @@ class _TrangChuState extends State<TrangChu> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      print("Index:"+index.toString());
     });
   }
 

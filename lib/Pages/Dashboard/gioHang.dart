@@ -1,4 +1,5 @@
 import 'package:btl/Object/user.dart';
+import 'package:btl/Pages/Dashboard/TrangChu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
@@ -124,7 +125,9 @@ class _GioHangState extends State<gioHang> {
             TextButton(
               child: Text('Có'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TrangChu()), (route) => false,);
+              //  Navigator.of(context).pop();
+                // Close the dialog
                 _deleteAllItems(); // Call method to delete all items
               },
             ),

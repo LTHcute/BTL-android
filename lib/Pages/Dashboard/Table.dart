@@ -323,9 +323,24 @@ class _TableListState extends State<TableList> {
                         )
                       ]);
                 },
+
               ),
             );
           },
-        ));
+
+        )
+    );
   }
+
 }
+// void deleteTablePaid(String tenban) async
+// {
+//   QuerySnapshot doc=await FirebaseFirestore.instance.collection("Bill").where("sTenBan",isEqualTo: tenban).get();
+//   if(doc.docs.isNotEmpty)
+//     {
+//       for (var item in doc.docs)
+//         {
+//           await item.reference.delete();
+//         }
+//     }
+// }

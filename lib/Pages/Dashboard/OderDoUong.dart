@@ -436,6 +436,82 @@ class _OderdouongState extends State<Oderdouong> {
       ),
     );
   }
+
+
+  search(String value) {}
+}
+
+Future<List<Map<String, dynamic>>> getSearch(String searchDrink) async {
+
+
+  final drinkCollection = FirebaseFirestore.instance;
+  QuerySnapshot firestore = await drinkCollection
+      .collection("Drink")
+      .where("sTenDoUong", isEqualTo: searchDrink)
+      .get();
+
+  return firestore.docs
+      .map((doc) => doc.data() as Map<String, dynamic>)
+      .toList();
+}
+
+Future getDrink() async {
+  QuerySnapshot drinkCollection =
+      await FirebaseFirestore.instance.collection("Drink").get();
+
+  List<drink> listDrink = [];
+  if (drinkCollection.docs.isNotEmpty) {
+    int count = 0;
+    drinkCollection.docs.forEach((value) {
+      count = count + 1;
+      drink _drink = new drink(
+        sMaDoUong: value["sMaDoUong"],
+        sTenDoUong: value["sTenDoUong"],
+        iGia: value["iGia"],
+        sThongTinChiTiet: value["sThongTinChiTiet"],
+        sImg: '',
+        // sSize: '',
+        // iSoLuong: value["iSoLuong"],
+        // iDuong: value["iDuong"],
+        // iDa: value["iDa"],
+        // sMaTopping: value["sMaTopping"],
+        // fThanhTien: ''
+      );
+      listDrink.add(_drink);
+    });
+    print("count:" + count.toString());
+  }
+}
+
+Future getDrinkFilter(String filters) async {
+  QuerySnapshot drinkCollection = await FirebaseFirestore.instance
+      .collection("Drink")
+      .where("sTenDoUong", isGreaterThan: filters)
+      .orderBy("sTenDoUong", descending: false)
+      .get();
+
+  List<drink> listDrink = [];
+  if (drinkCollection.docs.isNotEmpty) {
+    int count = 0;
+    drinkCollection.docs.forEach((value) {
+      count = count + 1;
+      drink _drink = new drink(
+          sMaDoUong: value["sMaDoUong"],
+          sTenDoUong: value["sTenDoUong"],
+          iGia: value["iGia"],
+          sThongTinChiTiet: value["sThongTinChiTiet"],
+          sImg: value["sImg"],
+          sSize: '',
+          iSoLuong: value["iSoLuong"],
+          iDuong: value["iDuong"],
+          iDa: value["iDa"],
+          sMaTopping: value["sMaTopping"],
+          fThanhTien: '');
+      listDrink.add(_drink);
+    });
+    print("count:" + count.toString());
+  }
+
 }
 
 extension StringCasingExtension on String {
