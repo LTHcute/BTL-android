@@ -1,4 +1,5 @@
 import 'package:btl/Object/user.dart';
+import 'package:btl/Pages/Dashboard/TrangChu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart';
@@ -123,7 +124,9 @@ class _GioHangState extends State<gioHang> {
             TextButton(
               child: Text('Có'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TrangChu()), (route) => false,);
+              //  Navigator.of(context).pop();
+                // Close the dialog
                 _deleteAllItems(); // Call method to delete all items
               },
             ),
@@ -208,65 +211,10 @@ class _GioHangState extends State<gioHang> {
               cartDrinks.add(dr);
             });
           }
-          int totalAmount = _calculateTotalAmount();
-          if(cartDrinks.length==0)
-            {
-              return Center(child: Text("Your cart is empty :("),);
-            }
-        else
-          {
-            print(cartDrinks.length);
-          return Column(
 
-          children: [
-          Expanded(
-          child: ListView.builder(
-          itemCount: cartDrinks.length,
-          itemBuilder: (context, index) {
-          final drink = cartDrinks[index];
-          return Card(
-          margin: EdgeInsets.all(8.0),
-          child: ListTile(
-          leading: Image.network(drink.sImg, width: 50),
-          title: Text(drink.sTenDoUong),
-          subtitle: Text(
-          'Size: ${drink.sSize}\nĐá: ${drink.iDa}%\nĐường: ${drink.iDuong}%\nTopping: ${drink.sMaTopping}\nGiá: ${drink.iGia * drink.iSoLuong} VND'),
-          trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          IconButton(
-          icon: Icon(Icons.remove, color: Colors.blue),
-          onPressed: () {
-          setState(() {
-          if (drink.iSoLuong > 1) {
-          // Decrease quantity
-          _updateQuantity(
-          drink.sMaDoUong, drink.iSoLuong - 1);
-          } else {
-          // Quantity is 1, so remove item
-          _updateQuantity(drink.sMaDoUong, 0);
-          }
-          });
-          },
-          ),
-          Text(' ${drink.iSoLuong}'),
-          IconButton(
-          icon: Icon(Icons.add, color: Colors.blue),
-          onPressed: () {
-          setState(() {
-          // Increase quantity
-          _updateQuantity(
-          drink.sMaDoUong, drink.iSoLuong + 1);
-          });
-          },
-          ),
-          IconButton(
-          icon: Icon(Icons.delete, color: Colors.pink),
-          onPressed: () => _deleteItem(drink.sMaDoUong),
-          ),
-          ],
-          ),
-          ),
+          int totalAmount = _calculateTotalAmount();
+
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
             children: [
               Expanded(
@@ -362,45 +310,7 @@ class _GioHangState extends State<gioHang> {
                 ),
               ),
             ],
-
           );
-          },
-          ),
-          ),
-          Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-          Text(
-          'Tổng tiền: ${_calculateTotalAmount()} VND',
-          style:
-          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          ElevatedButton(
-          onPressed: () {
-          addBill();
-          Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) => xacNhanDon(
-          orderedDrinks:
-          cartDrinks, // Make sure cartDrinks is defined and populated
-          totalAmount:
-          _calculateTotalAmount(), // Replace with your actual total amount calculation
-          tenBan: widget.tenBan,
-          ),
-          ),
-          );
-          },
-          child: Text('Thanh toán'),
-          ),
-          ],
-          ),
-          ),
-          ],
-          );
-          }
         },
       ),
     );
