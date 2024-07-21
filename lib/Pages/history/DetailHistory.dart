@@ -144,13 +144,17 @@ class DetailHistory extends StatelessWidget {
                                     title: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
+                                        Flexible(
+                                        child: Text(
                                           "(${drinks[index]['bill_detail'].iSoLuong}x) ${drinks[index]['drink'].sTenDoUong}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18,
                                           ),
-                                        ),
+                                        ),),
                                         Text("${formatter.format(drinks[index]['drink'].iGia)} Đ")
                                       ],
                                     ),

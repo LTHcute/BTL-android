@@ -174,7 +174,7 @@ import 'package:btl/Pages/Dashboard/donThanhCong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:btl/Object/drink.dart'; // Import mô hình Drink
-import 'package:qr_flutter/qr_flutter.dart'; // Import qr_flutter package
+//import 'package:qr_flutter/qr_flutter.dart'; // Import qr_flutter package
 
 class xacNhanDon extends StatefulWidget {
   final int totalAmount;
