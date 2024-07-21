@@ -194,7 +194,7 @@ class _TableListState extends State<TableList> {
                                               // Navigator.push(context,
                                               // MaterialPageRoute(builder: ))
                                             });
-                                          }, child: Text("Thanh toán",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 15),),style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),minimumSize: MaterialStateProperty.all<Size>(Size(200,40))),),
+                                          }, child: Text("Đã thanh toán",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w700,fontSize: 15),),style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),minimumSize: MaterialStateProperty.all<Size>(Size(200,40))),),
                                         ],
                                       ),
                                     )

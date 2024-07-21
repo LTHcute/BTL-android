@@ -362,76 +362,76 @@ class _OderdouongState extends State<Oderdouong> {
           SizedBox(
             height: 10,
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              fixedSize: Size(200, 50),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                ),
-                Text(
-                  "Đặt đồ",
-                  style: TextStyle(),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Stack(
-                  children: [
-                    Container(
-                      child: Icon(
-                        Icons.shopping_cart,
-                      ),
-                      height: 40,
-                      width: 40,
-                    ),
-                    FutureBuilder<int>(
-                      future: _getTotalQuantity(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container();
-                        }
-
-                        int itemCount = snapshot.data ?? 0;
-
-                        return Positioned(
-                          right: 0,
-                          top: 0,
-                          child: itemCount > 0
-                              ? Container(
-                                  padding: EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxWidth: 20,
-                                    maxHeight: 20,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '$itemCount',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(),
-                        );
-                      },
-                    )
-                  ],
-                ),
-              ],
-            ),
-            onPressed: () {},
-          )
+          // ElevatedButton(
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: Colors.green,
+          //     fixedSize: Size(200, 50),
+          //   ),
+            // child: Row(
+            //   children: [
+            //     SizedBox(
+            //       width: 40,
+            //     ),
+            //     Text(
+            //       "Đặt đồ",
+            //       style: TextStyle(),
+            //     ),
+            //     SizedBox(
+            //       width: 10,
+            //     ),
+            //     Stack(
+            //       children: [
+            //         Container(
+            //           child: Icon(
+            //             Icons.shopping_cart,
+            //           ),
+            //           height: 40,
+            //           width: 40,
+            //         ),
+            //         FutureBuilder<int>(
+            //           future: _getTotalQuantity(),
+            //           builder: (context, snapshot) {
+            //             if (snapshot.connectionState ==
+            //                 ConnectionState.waiting) {
+            //               return Container();
+            //             }
+            //
+            //             int itemCount = snapshot.data ?? 0;
+            //
+            //             return Positioned(
+            //               right: 0,
+            //               top: 0,
+            //               child: itemCount > 0
+            //                   ? Container(
+            //                       padding: EdgeInsets.all(2),
+            //                       decoration: BoxDecoration(
+            //                         color: Colors.red,
+            //                         borderRadius: BorderRadius.circular(6),
+            //                       ),
+            //                       constraints: BoxConstraints(
+            //                         maxWidth: 20,
+            //                         maxHeight: 20,
+            //                       ),
+            //                       child: Center(
+            //                         child: Text(
+            //                           '$itemCount',
+            //                           style: TextStyle(
+            //                             color: Colors.white,
+            //                             fontSize: 12,
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     )
+            //                   : Container(),
+            //             );
+            //           },
+            //         )
+            //       ],
+            //     ),
+            //   ],
+            // ),
+          //   onPressed: () {},
+          // )
         ],
       ),
     );
