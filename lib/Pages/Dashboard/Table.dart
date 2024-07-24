@@ -32,6 +32,7 @@ class _TableListState extends State<TableList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             "DANH MỤC BÀN",
             style: TextStyle(
