@@ -103,7 +103,7 @@ class DetailHistory extends StatelessWidget {
                     bottom: BorderSide(color: Colors.grey, width: 1)),
               ),
               child: Text(
-                "Bàn ${bill['sMaBan']}",
+                "${bill['sMaBan']}",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

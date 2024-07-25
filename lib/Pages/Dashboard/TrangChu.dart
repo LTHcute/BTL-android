@@ -20,14 +20,15 @@ class _TrangChuState extends State<TrangChu> {
     History(),
     Setting()
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      print("Index:"+index.toString());
+      print("Index:" + index.toString());
     });
   }
 
-  List<drink> listDrink = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,38 +49,4 @@ class _TrangChuState extends State<TrangChu> {
     );
   }
 
-  statusColor(status) {
-    switch (status) {
-      case 'Trống':
-        return Colors.grey;
-        break;
-      case "Đang sử dụng":
-        return Colors.green;
-        break;
-      case "Đã đặt":
-        return Colors.orange;
-        break;
-    }
-  }
-}
-
-void ShowDialog() {
-  AlertDialog(
-    title: Text(
-      "Lựa chọn",
-      style: TextStyle(
-          color: Colors.black, fontWeight: FontWeight.w700, fontSize: 17),
-    ),
-    actions: [
-      ElevatedButton(
-        onPressed: () {},
-        child: Text(
-          "Đặt trước",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15),
-        ),
-        style: ButtonStyle(),
-      )
-    ],
-  );
 }
